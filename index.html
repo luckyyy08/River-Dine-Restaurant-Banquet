@@ -2673,9 +2673,122 @@
             50% { transform: translate(60px, -40px) scale(1.15); }
             100% { transform: translate(-20px, 30px) scale(0.9); }
         }
+
+        /* 10. Hyper-Luxury Typography, Dividers, & Card Sheens */
+        .section-title em,
+        .hero-title em {
+            font-style: italic;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .section-label::before,
+        .section-label::after {
+            background: linear-gradient(90deg, transparent, var(--accent), transparent) !important;
+            opacity: 0.8 !important;
+        }
+
+        .luxury-divider {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(var(--accent-rgb), 0.25) 50%, transparent 100%);
+            margin: 40px 0;
+        }
+
+        /* Gold Leaf Reflective card sheens */
+        .menu-item, .order-card, .review-card {
+            position: relative;
+            overflow: hidden;
+        }
+        .menu-item::after,
+        .order-card::after,
+        .review-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 45%, rgba(var(--accent-rgb), 0.08) 50%, transparent 55%);
+            background-size: 250% 250%;
+            background-position: -120% 0;
+            transition: background-position 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            pointer-events: none;
+            z-index: 2;
+        }
+        .menu-item:hover::after,
+        .order-card:hover::after,
+        .review-card:hover::after {
+            background-position: 150% 0;
+        }
+
+        /* Luxury Concierge Preloader */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            background: #060606;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), visibility 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        #preloader.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+        #preloader-logo {
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .preloader-bar-wrap {
+            width: 150px;
+            height: 1px;
+            background: rgba(var(--accent-rgb), 0.15);
+            margin: 24px auto;
+            position: relative;
+            overflow: hidden;
+            border-radius: 2px;
+        }
+        #preloader-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0%;
+            background: var(--accent-gradient);
+            transition: width 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.5);
+        }
+        .preloader-text {
+            font-family: var(--font-body);
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent);
+            opacity: 0;
+            transform: translateY(5px);
+            transition: all 0.8s ease 0.4s;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Luxury Preloader -->
+    <div id="preloader">
+        <div style="text-align: center;">
+            <img src="images/logo.png" id="preloader-logo" alt="River Dine Logo">
+            <div class="preloader-bar-wrap">
+                <div id="preloader-bar"></div>
+            </div>
+            <div class="preloader-text" id="preloader-text">Loading Experience</div>
+        </div>
+    </div>
 
     <!-- Aurora Background Glows -->
     <div class="aurora-glow glow-1"></div>
@@ -4005,6 +4118,44 @@
         chatInput.addEventListener('keydown', e => {
             if (e.key === 'Enter') { handleChat(chatInput.value); chatInput.value = ''; }
         });
+
+        /* ==================================================================
+           LUXURY CONCIERGE PRELOADER
+           ================================================================== */
+        const preloader = document.getElementById('preloader');
+        const preloaderLogo = document.getElementById('preloader-logo');
+        const preloaderBar = document.getElementById('preloader-bar');
+        const preloaderText = document.getElementById('preloader-text');
+
+        setTimeout(() => {
+            if (preloaderLogo) {
+                preloaderLogo.style.opacity = '1';
+                preloaderLogo.style.transform = 'scale(1)';
+            }
+            if (preloaderBar) preloaderBar.style.width = '100%';
+            if (preloaderText) {
+                preloaderText.style.opacity = '0.8';
+                preloaderText.style.transform = 'translateY(0)';
+            }
+        }, 150);
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                if (preloader) {
+                    preloader.style.opacity = '0';
+                    preloader.style.visibility = 'hidden';
+                    setTimeout(() => preloader.remove(), 800);
+                }
+            }, 1800);
+        });
+
+        setTimeout(() => {
+            if (preloader && document.body.contains(preloader)) {
+                preloader.style.opacity = '0';
+                preloader.style.visibility = 'hidden';
+                setTimeout(() => preloader.remove(), 800);
+            }
+        }, 4000);
 
         /* ==================================================================
            SCROLL PROGRESS BAR
